@@ -1,0 +1,1 @@
+This is POI application that is based on Lighhouses around Ireland.
