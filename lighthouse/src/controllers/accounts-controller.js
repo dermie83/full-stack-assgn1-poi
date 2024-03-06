@@ -1,17 +1,17 @@
-import { UserSpec } from "../models/joi-schemas.js";
+import { UserSpec, UserCredentialsSpec } from "../models/joi-schemas.js";
 import { db } from "../models/db.js";
 
 export const accountsController = {
   index: {
     auth: false,
     handler: function (request, h) {
-      return h.view("main", { title: "Welcome to Playlist" });
+      return h.view("main", { title: "Welcome to Irish Lighthouses" });
     },
   },
   showSignup: {
     auth: false,
     handler: function (request, h) {
-      return h.view("signup-view", { title: "Sign up for Playlist" });
+      return h.view("signup-view", { title: "Sign up for Irish Lighthouses" });
     },
   },
   signup: {
@@ -38,11 +38,18 @@ export const accountsController = {
   showLogin: {
     auth: false,
     handler: function (request, h) {
-      return h.view("login-view", { title: "Login to Playlist" });
+      return h.view("login-view", { title: "Login to Irish Lighthouses" });
     },
   },
   login: {
     auth: false,
+    validate: {
+      payload: UserCredentialsSpec,
+      options: { abortEarly: false },
+      failAction: function (request, h, error) {
+        return h.view("login-view", { title: "Login error", errors: error.details }).takeover().code(400);
+      },
+    },
     handler: async function (request, h) {
       const { email, password } = request.payload;
       const user = await db.userStore.getUserByEmail(email);
